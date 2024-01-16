@@ -65,14 +65,17 @@ public class ItemController {
     }
 
     @GetMapping("/listItem")
-        public ResponseEntity<List<Item>> getItemDetailList(@RequestParam int itemStart, @RequestParam int itemEnd) {
+    public ResponseEntity<List<Item>> getItemDetailList(@RequestParam int itemStart, @RequestParam int itemEnd) {
 
 
         final List<Item> list = itemRepository.findAll();
 
-        List<Item> finalList = IntStream.range(itemStart, itemEnd).mapToObj(i -> list.get(i)).collect(Collectors.toList());
+        if (!list.isEmpty()) {
+            List<Item> finalList = IntStream.range(itemStart - 1 , itemEnd).mapToObj(i -> list.get(i)).collect(Collectors.toList());
+            return new ResponseEntity(finalList, HttpStatus.OK);
+        }
 
-        return new ResponseEntity(finalList, HttpStatus.OK);
+        return new ResponseEntity(list, HttpStatus.OK);
     }
 
 
